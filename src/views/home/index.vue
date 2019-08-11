@@ -49,7 +49,7 @@
         </van-pull-refresh>
         <!-- 弹出投诉框 -->
          <!-- :value="showAction" @input="showAction" -->
-        <complaint :currentArticle="currentArticle" v-model="showAction"></complaint>
+        <complaint @handleok="handleok" :currentArticle="currentArticle" v-model="showAction"></complaint>
     </div>
 </template>
 
@@ -138,7 +138,6 @@ export default {
                 // 携带最新时间
                 timestamp: activeChannel.timestamp
             });
-            console.log(data);
             // 把文章列表存储到channel的articles属性中
             activeChannel.articles.push(...data.results);
             // 保存时间戳
@@ -163,6 +162,21 @@ export default {
         handleArticleShow (item) {
             this.showAction = true;
             this.currentArticle = item;
+        },
+        // 操作成功执行
+        handleok () {
+            console.log(1);
+            // 如果成功，隐藏弹窗
+            this.showAction = false;
+            // 获取当前频道的文章
+            const articles = this.channels[this.activeTab].articles;
+            // 索引
+            const index = articles.findIndex((item) => {
+                // findIndex返回true时候的那条数据的索引
+                return item.art_id === this.currentArticle.art_id;
+            });
+            // 移除当前文章
+            articles.splice(index, 1);
         }
     },
     // 创建实例前
