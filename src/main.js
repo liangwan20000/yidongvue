@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './router/index.js';
 import store from './store/index.js';
 // 引入布局组件
-import Vant, { Lazyload } from 'vant';
+import Vant, { Lazyload, Dialog } from 'vant';
 // 引入布局组件样式
 import 'vant/lib/index.css';
 // 引入rem适配组件
@@ -18,11 +18,22 @@ import zhCN from 'vee-validate/dist/locale/zh_CN';
 Vue.use(VeeValidate, {
     events: 'blur'
 });
+
 Validator.localize('zh-cn', zhCN);
 
 // 使用前挂载
 Vue.use(Vant);
+// 挂载图片懒加载
 Vue.use(Lazyload);
+// 挂载弹窗
+Vue.use(Dialog);
+
+// 给vue实例添加延时器
+Vue.prototype.$sleep = (time) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => { resolve(); }, time);
+    });
+};
 
 Vue.config.productionTip = false;
 

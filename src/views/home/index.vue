@@ -6,62 +6,75 @@
                 <van-input name="search" slot="center" />
             </van-nav-bar>
         </div>
-
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-
-        <!-- 频道 -->
-        <van-tabs v-model="activeTab">
-            <van-tab v-for="item in channels"
-            :title="item.name"
-            :key="item.id">
-
-                <!-- 文章列表 -->
-                <van-list
-                    v-model="loading"
-                    :finished="finished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                >
-                    <van-cell
-                        v-for="item in item.articles"
-                        :key="item.aut_id"
-                        :title="item.title"
+            <!-- 频道 -->
+            <van-tabs v-model="activeTab">
+                <van-tab v-for="item in channels"
+                :title="item.name"
+                :key="item.id">
+                    <!-- 文章列表 -->
+                    <van-list
+                        v-model="loading"
+                        :finished="finished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
                     >
-                        <div slot="label">
-                            <template v-if="item.cover.type">
-                                <van-grid :border="false" :column-num="3">
-                                    <van-grid-item v-for="(item, index) in item.cover.images" :key="index">
-                                        <van-image lazy-load :src="item"/>
-                                    </van-grid-item>
-                                </van-grid>
-                            </template>
-                            <p>
-                                <span>{{ item.aut_name }}</span>
-                                <span>{{ item.comm_count }}</span>
-                                <span>{{ item.pubdate }}</span>
-                            </p>
-                        </div>
-
-                    </van-cell>
-                </van-list>
-
-            </van-tab>
-        </van-tabs>
-
+                        <!-- 展示每一篇文章 -->
+                        <van-cell
+                            v-for="item in item.articles"
+                            :key="item.aut_id"
+                            :title="item.title"
+                        >
+                            <!-- 文章里的内容 -->
+                            <div slot="label">
+                                <template v-if="item.cover.type">
+                                    <van-grid :border="false" :column-num="3">
+                                        <van-grid-item v-for="(item, index) in item.cover.images" :key="index">
+                                            <van-image lazy-load :src="item"/>
+                                        </van-grid-item>
+                                    </van-grid>
+                                </template>
+                                <p>
+                                    <span>{{ item.aut_name }}</span>&nbsp;
+                                    <span>{{ item.comm_count }}条评论</span>&nbsp;
+                                    <span>{{ item.pubdate | fltime}}</span>
+                                    <van-icon name="close" class="xx" @click="handleArticleShow(item)"/>
+                                </p>
+                            </div>
+                        </van-cell>
+                    </van-list>
+                </van-tab>
+            </van-tabs>
         </van-pull-refresh>
+        <!-- 弹出投诉框 -->
+         <!-- :value="showAction" @input="showAction" -->
+        <complaint :currentArticle="currentArticle" v-model="showAction"></complaint>
     </div>
 </template>
 
 <script>
 // 引入请求频道的方法
 import { getChannels } from '../../api/channel.js';
+// 加载文章列表方法
 import { getArticles } from '../../api/article.js';
+// 引入全局过滤器
+import '@/filters/index.js';
+// 引入投诉模块
+import complaint from './components/Complaint.vue';
 export default {
     name: 'Home',
+    // 模板
+    components: {
+        complaint
+    },
     // 数据
     data () {
         return {
+            // 保存当前要投诉的对象
+            currentArticle: {},
+            // 控制投诉弹窗显示隐藏
+            showAction: false,
             // 当前频道
             activeTab: 0,
             // 控制发起异步请求
@@ -80,10 +93,6 @@ export default {
     },
     // 自定义方法
     methods: {
-        // 获取频道对应的文章列表
-        async article () {
-
-        },
         // 获取频道列表
         async loadChannels () {
             try {
@@ -94,7 +103,6 @@ export default {
                     const data = await getChannels();
                     // 获取频道列表
                     this.channels = data.channels;
-                    // console.log(this.list);
                 } else {
                     // 没有登录，从本地获取数据，如果没有再重新请求，请求到数据后存储到本地
                     this.channels = JSON.parse(window.localStorage.getItem('channels')) || [];
@@ -106,9 +114,11 @@ export default {
                 };
                 // 给每一个频道添加articles属性
                 this.channels.forEach((item) => {
-                    item.articles = [];
+                    // item.articles = [];
                     // 动态增加的成员想要成为响应式的数据，需要使用$set
-                    // this.$set(item, 'acticles', []);
+                    this.$set(item, 'articles', []);
+                    // 给每个频道一个独立的时间戳
+                    item.timestamp = Date.now();
                 });
             } catch (err) {
                 this.$stoast.fail('获取频道数据失败');
@@ -117,18 +127,27 @@ export default {
         },
         // 加载文章列表
         async onLoad () {
-            // 获取当前频道的id
+            // 加入延时器
+            await this.$sleep(1000);
+            // 获取当前频道
             const activeChannel = this.channels[this.activeTab];
             // 发送请求
             const data = await getArticles({
+                // 携带ID
                 channelId: activeChannel.id,
-                timestamp: this.timestamp
+                // 携带最新时间
+                timestamp: activeChannel.timestamp
             });
             console.log(data);
             // 把文章列表存储到channel的articles属性中
             activeChannel.articles.push(...data.results);
             // 保存时间戳
             this.timestamp = data.pre_timestamp;
+            // 判断是否还有数据
+            if (data.results.length === 0) {
+                // 显示提示
+                this.finished = true;
+            };
             // 加载状态结束
             this.loading = false;
         },
@@ -139,10 +158,15 @@ export default {
                 this.isLoading = false;
                 this.count++;
             }, 1000);
+        },
+        // 投诉文章
+        handleArticleShow (item) {
+            this.showAction = true;
+            this.currentArticle = item;
         }
     },
     // 创建实例前
-    created () {
+    mounted () {
         // 获取频道列表
         this.loadChannels();
     }
@@ -150,12 +174,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
+    // 整个文章页
     .van-tabs {
-        margin-top: 92px;
+        margin-top: 184px;
         margin-bottom: 100px;
     }
-    .van-tabs /deep/ .van-tabs__content {
-        color: red;
+    // 频道列表
+    .van-tabs /deep/ .van-tabs__wrap {
+        position: fixed;
+        width: 100%;
+        transform: translateX(-50%);
+        margin-left: 50%;
+        margin-top: -92px;
+        z-index: 99;
+    }
+    // 右侧投诉按钮
+    .xx {
+        float: right;
+        font-size: 30px;
+    }
+    // 弹窗
+    .van-dialog {
+        z-index: 999;
     }
 </style>
 

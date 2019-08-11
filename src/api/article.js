@@ -1,6 +1,7 @@
 // 引入axios实例
 import request from '@/utils/request.js';
 
+// 获取文章
 export const getArticles = ({
     channelId,
     timestamp = Date.now(),
@@ -14,5 +15,12 @@ export const getArticles = ({
             timestamp: timestamp,
             with_top: withTop
         }
+    });
+};
+
+// 对文章不喜欢
+export const dislikeArticle = (id) => {
+    return request.post(' /app/v1_0/article/dislikes', {
+        target: id
     });
 };
