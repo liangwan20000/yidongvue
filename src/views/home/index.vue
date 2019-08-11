@@ -23,7 +23,7 @@
                         <!-- 展示每一篇文章 -->
                         <van-cell
                             v-for="item in item.articles"
-                            :key="item.aut_id"
+                            :key="item.aut_id.toString()"
                             :title="item.title"
                         >
                             <!-- 文章里的内容 -->
@@ -49,7 +49,10 @@
         </van-pull-refresh>
         <!-- 弹出投诉框 -->
          <!-- :value="showAction" @input="showAction" -->
-        <complaint @handleok="handleok" :currentArticle="currentArticle" v-model="showAction"></complaint>
+        <complaint
+        @handleok="handleok"
+        :currentArticle="currentArticle"
+        v-model="showAction"></complaint>
     </div>
 </template>
 
@@ -163,9 +166,8 @@ export default {
             this.showAction = true;
             this.currentArticle = item;
         },
-        // 操作成功执行
+        // 操作成功执行移除文章
         handleok () {
-            console.log(1);
             // 如果成功，隐藏弹窗
             this.showAction = false;
             // 获取当前频道的文章

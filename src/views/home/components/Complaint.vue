@@ -34,6 +34,7 @@
 <script>
 // 引入不感兴趣API
 import { dislikeArticle } from '@/api/article.js';
+import { blackUserList } from '@/api/user.js';
 export default {
     // 组件名称
     name: 'complaint',
@@ -58,6 +59,9 @@ export default {
             case 'dislike':
                 this.dislike();
                 break;
+            case 'blacklist':
+                this.blackUser();
+                break;
             }
         },
         // 不感兴趣方法
@@ -67,11 +71,6 @@ export default {
                 console.log(id);
                 // 1.发送请求
                 await dislikeArticle(id);
-                // const data = await dislikeArticle(id).catch((err) => {
-                //     this.$toast.fail('操作失败');
-                //     console.log(err);
-                // });
-
                 // 2.提示成功还是失败
                 this.$toast.success('操作成功');
                 // 3.告知home操作成功
@@ -81,6 +80,25 @@ export default {
                 this.$toast.fail('操作失败');
                 // 3.告知home操作成功
                 // this.$emit('handleok');
+                console.log(err);
+            }
+        },
+        // 拉黑作者
+        async blackUser () {
+            try {
+                const id = this.currentArticle.aut_id;
+                console.log(id);
+                // 1.发送请求
+                await blackUserList(id);
+                // 2.提示成功还是失败
+                this.$toast.success('操作成功');
+                // 3.告知home操作成功
+                this.$emit('handleok');
+                // 3.如果成功隐藏moreaction,移除不感兴趣的文章
+            } catch (err) {
+                this.$toast.fail('操作失败');
+                // 3.告知home操作成功
+                // this.$emit('blackUserok');
                 console.log(err);
             }
         }
