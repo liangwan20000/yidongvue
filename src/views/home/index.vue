@@ -2,14 +2,18 @@
     <div>
         <!-- 头部 -->
         <div class="home-top">
-            <van-nav-bar fixed title="黑马头条" left-text="返回">
-                <van-input name="search" slot="center" />
-            </van-nav-bar>
+            <!-- <van-nav-bar fixed left-text="返回"> -->
+                <van-search placeholder="请输入搜索关键词" v-model="value" background="#FF4040"/>
+            <!-- </van-nav-bar> -->
         </div>
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
             <!-- 频道 -->
             <van-tabs v-model="activeTab">
+                <div slot="nav-right" class="bigbox">
+                    <van-icon class="wap-nav" name="wap-nav" @click="showPopup"></van-icon>
+                </div>
+
                 <van-tab v-for="item in channels"
                 :title="item.name"
                 :key="item.id">
@@ -52,7 +56,15 @@
         <complaint
         @handleok="handleok"
         :currentArticle="currentArticle"
-        v-model="showAction"></complaint>
+        v-model="showAction">
+        </complaint>
+        <!-- 弹出频道列表 -->
+        <van-popup
+        v-model="show"
+        position="left"
+        :style="{ height: '100%', width: '80%' }"
+        >内容</van-popup>
+
     </div>
 </template>
 
@@ -74,6 +86,10 @@ export default {
     // 数据
     data () {
         return {
+            // 输入框内容
+            value: '',
+            // 频道弹窗开关
+            show: false,
             // 保存当前要投诉的对象
             currentArticle: {},
             // 控制投诉弹窗显示隐藏
@@ -96,6 +112,10 @@ export default {
     },
     // 自定义方法
     methods: {
+        // 控制频道弹窗
+        showPopup () {
+            this.show = true;
+        },
         // 获取频道列表
         async loadChannels () {
             try {
@@ -127,6 +147,7 @@ export default {
                 this.$stoast.fail('获取频道数据失败');
                 console.log(err);
             }
+            this.channels.push('');
         },
         // 加载文章列表
         async onLoad () {
@@ -167,7 +188,7 @@ export default {
             this.currentArticle = item;
         },
         // 操作成功执行移除文章
-        handleok () {
+        handleok (x) {
             // 如果成功，隐藏弹窗
             this.showAction = false;
             // 获取当前频道的文章
@@ -190,21 +211,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
+    .home-top {
+        height: 107px;
+        overflow: hidden;
+    }
     // 整个文章页
     .van-tabs {
-        margin-top: 184px;
+        margin-top: 92px;
         margin-bottom: 100px;
     }
     // 频道列表
     .van-tabs /deep/ .van-tabs__wrap {
         position: fixed;
-        width: 100%;
+        width: 99%;
         transform: translateX(-50%);
         margin-left: 50%;
-        margin-top: -92px;
-        z-index: 99;
+        margin-right: 1px;
+        margin-top: -96px;
+        z-index: 9;
     }
-    // 右侧投诉按钮
+    // 评论右侧投诉按钮
     .xx {
         float: right;
         font-size: 30px;
@@ -212,6 +238,27 @@ export default {
     // 弹窗
     .van-dialog {
         z-index: 999;
+    }
+    // 顶部搜索框
+    .home-top /deep/ .van-search {
+        position: fixed;
+        width: 100%;
+        transform: translateX(-50%);
+        margin-left: 50%;
+        z-index: 99;
+        background-color: #1989fa;
+    }
+    // 频道弹窗开关
+    .wap-nav {
+        position: fixed;
+        right: 0;
+        height: 88px;
+        line-height: 88px;
+        background-color: #fff;
+        width: 80px;
+        font-size: 30px;
+        text-align: center;
+        border-left: 1px solid #ccc;
     }
 </style>
 

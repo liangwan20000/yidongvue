@@ -20,7 +20,18 @@ export const getArticles = ({
 
 // 对文章不喜欢
 export const dislikeArticle = (id) => {
-    return request.post(' /app/v1_0/article/dislikes', {
+    return request.post('/app/v1_0/article/dislikes', {
+        target: id
+    });
+};
+
+// 反馈
+export const reportArticle = ({
+    id,
+    type
+}) => {
+    return request.post('/app/v1_0/article/reports', {
+        type: type,
         target: id
     });
 };

@@ -2,7 +2,7 @@
     <div class="login">
         <!-- 导航头 -->
         <van-nav-bar
-          title="登录"
+          title="黑马头条"
         />
         <!-- 登录框 -->
         <van-cell-group>

@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './router/index.js';
 import store from './store/index.js';
 // 引入布局组件
-import Vant, { Lazyload, Dialog } from 'vant';
+import Vant, { Lazyload, Dialog, Popup, Search } from 'vant';
 // 引入布局组件样式
 import 'vant/lib/index.css';
 // 引入rem适配组件
@@ -27,6 +27,10 @@ Vue.use(Vant);
 Vue.use(Lazyload);
 // 挂载弹窗
 Vue.use(Dialog);
+// 挂载频道弹窗
+Vue.use(Popup);
+// 挂载头部输入框
+Vue.use(Search);
 
 // 给vue实例添加延时器
 Vue.prototype.$sleep = (time) => {
