@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <div class="home-top">
             <!-- <van-nav-bar fixed left-text="返回"> -->
-            <van-search placeholder="请输入搜索关键词" v-model="value" background="#FF4040"/>
+            <van-search @click="$router.push('/search')" placeholder="请输入搜索关键词" v-model="value" background="#FF4040"/>
             <!-- </van-nav-bar> -->
         </div>
         <!-- 下拉刷新 -->
@@ -197,9 +197,6 @@ export default {
             // setTimeout(() => {
             this.$toast(`${data.results.length}条数据跟新`);
             this.isLoading = false;
-            // this.count++;
-            // }, 800);
-            // this.successText = `${data.results.length}条数据跟新`;
         },
         // 投诉文章
         handleArticleShow (item) {

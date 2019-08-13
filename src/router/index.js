@@ -7,6 +7,12 @@ export default new Router({
     routes: [
         // 默认显示登录页
         {
+            path: '/search',
+            name: 'search',
+            component: () => import(/* webpackChunkName: "search" */ '@/views/search/index.vue')
+        },
+        // 搜索页
+        {
             path: '/',
             redirect: '/login'
         },
