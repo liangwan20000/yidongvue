@@ -3,15 +3,18 @@
         <!-- 头部 -->
         <div class="home-top">
             <!-- <van-nav-bar fixed left-text="返回"> -->
-                <van-search placeholder="请输入搜索关键词" v-model="value" background="#FF4040"/>
+            <van-search placeholder="请输入搜索关键词" v-model="value" background="#FF4040"/>
             <!-- </van-nav-bar> -->
         </div>
         <!-- 下拉刷新 -->
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-pull-refresh
+            v-model="isLoading"
+            @refresh="onRefresh"
+            :success-text="successText">
             <!-- 频道 -->
             <van-tabs v-model="activeTab">
                 <div slot="nav-right" class="bigbox">
-                    <van-icon class="wap-nav" name="wap-nav"></van-icon>
+                    <van-icon class="wap-nav" name="wap-nav"  @click="showChannel = true"></van-icon>
                 </div>
 
                 <van-tab v-for="item in channels"
@@ -59,7 +62,12 @@
         v-model="showAction">
         </complaint>
         <!-- 弹出频道列表 -->
-        <homeChannel></homeChannel>
+        <homeChannel
+        @selectMyIndex="selectMyIndex"
+        v-model="showChannel"
+        :channels="channels"
+        :activeTab="activeTab"
+        ></homeChannel>
     </div>
 </template>
 
@@ -84,10 +92,12 @@ export default {
     // 数据
     data () {
         return {
+            // 下拉更新提示文字
+            successText: '',
             // 输入框内容
             value: '',
             // 频道弹窗开关
-            // show: false,
+            showChannel: false,
             // 保存当前要投诉的对象
             currentArticle: {},
             // 控制投诉弹窗显示隐藏
@@ -145,7 +155,6 @@ export default {
                 this.$stoast.fail('获取频道数据失败');
                 console.log(err);
             }
-            this.channels.push('');
         },
         // 加载文章列表
         async onLoad () {
@@ -173,12 +182,24 @@ export default {
             this.loading = false;
         },
         // 下拉刷新
-        onRefresh () {
-            setTimeout(() => {
-                this.$toast('刷新成功');
-                this.isLoading = false;
-                this.count++;
-            }, 1000);
+        async onRefresh () {
+            // 获取当前频道
+            const activeChannel = this.channels[this.activeTab];
+            // 发送请求
+            const data = await getArticles({
+                // 携带ID
+                channelId: activeChannel.id,
+                // 携带最新时间
+                timestamp: Date.now()
+            });
+            // 把文章列表存储到channel的articles属性中
+            activeChannel.articles.unshift(...data.results);
+            // setTimeout(() => {
+            this.$toast(`${data.results.length}条数据跟新`);
+            this.isLoading = false;
+            // this.count++;
+            // }, 800);
+            // this.successText = `${data.results.length}条数据跟新`;
         },
         // 投诉文章
         handleArticleShow (item) {
@@ -198,6 +219,12 @@ export default {
             });
             // 移除当前文章
             articles.splice(index, 1);
+        },
+        // 处理频道管理中选择我的频道
+        selectMyIndex (index) {
+            this.activeTab = index;
+            // 隐藏弹窗
+            this.showChannel = false;
         }
     },
     // 创建实例前

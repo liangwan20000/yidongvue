@@ -76,7 +76,6 @@ export default {
         async dislike () {
             try {
                 const id = this.currentArticle.art_id;
-                console.log(id);
                 // 1.发送请求
                 await dislikeArticle(id);
                 // 2.提示成功还是失败

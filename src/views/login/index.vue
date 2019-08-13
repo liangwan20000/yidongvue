@@ -68,10 +68,8 @@ export default {
                 this.btnLoading = false;
                 return;
             };
-            console.log(1);
             // 获取登录状态
             let token = await login(this.user).catch((err) => { return this.$toast.fail('登录失败' + err); });
-            console.log(2);
             // 保存登录状态
             this.$store.commit('setUser', token);
             // 提示登陆成功
