@@ -21,8 +21,9 @@
                 @click="onSearch(item)"
                 v-for="item in list"
                 :key="item"
-                :title="item"
-                icon="search" />
+                icon="search">
+                <div slot="title" v-html="heightLight(item)"></div>
+                </van-cell>
             </van-cell-group>
         <!-- </van-nav-bar> -->
         <!-- 搜索历史 -->
@@ -75,6 +76,9 @@ export default {
         };
     },
     methods: {
+        heightLight (item) {
+            return item.toLocaleLowerCase().split(this.value).join(`<span style="color: red">${this.value}</span>`);
+        },
         // 搜索
         onSearch (item) {
             // 对不同搜索方式的处理
