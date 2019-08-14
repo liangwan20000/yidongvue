@@ -35,3 +35,10 @@ export const reportArticle = ({
         target: id
     });
 };
+
+/**
+ * 获取文章详情
+ */
+export const queryArticle = (id) => {
+    return request.get(`/app/v1_0/articles/${id}`);
+};

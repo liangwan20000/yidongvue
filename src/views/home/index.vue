@@ -30,8 +30,9 @@
                         <!-- 展示每一篇文章 -->
                         <van-cell
                             v-for="item in item.articles"
-                            :key="item.aut_id.toString()"
+                            :key="item.art_id.toString()"
                             :title="item.title"
+                            @click="$router.push({ name: 'article', params: { id: item.art_id } })"
                         >
                             <!-- 文章里的内容 -->
                             <div slot="label">

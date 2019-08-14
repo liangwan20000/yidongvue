@@ -19,6 +19,13 @@ export default new Router({
             props: true,
             component: () => import(/* webpackChunkName: "search-result" */ '@/views/search-result/index.vue')
         },
+        {
+            path: '/article/:id',
+            name: 'article',
+            // 开启路由传参
+            props: true,
+            component: () => import(/* webpackChunkName: "article" */ '@/views/article/index.vue')
+        },
         // 搜索页
         {
             path: '/',

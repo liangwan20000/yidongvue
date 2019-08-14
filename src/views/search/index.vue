@@ -44,6 +44,7 @@
             </van-cell>
             <van-cell
                 v-for="item in hitories"
+                @click="onSearch(item)"
                 :key="item"
                 :title="item">
                 <van-icon
@@ -59,9 +60,11 @@
 
 <script>
 // 获取搜索建议
-import { get } from '@/api/search.js';
+import { get, getHistoricalRecords } from '@/api/search.js';
 // 引入lodash
 import _ from 'lodash';
+// 引入store
+import store from '@/store/index.js';
 export default {
     data () {
         return {
@@ -80,16 +83,28 @@ export default {
             return item.toLocaleLowerCase().split(this.value).join(`<span style="color: red">${this.value}</span>`);
         },
         // 搜索
-        onSearch (item) {
+        async onSearch (item) {
             // 对不同搜索方式的处理
             let value = item || this.value;
             // 判断数组是否重复
             if (!this.hitories.includes(value)) {
                 // 保存搜索记录
                 this.hitories.push(value);
-                // 保存到本地
-                window.localStorage.setItem('hitories', JSON.stringify(this.hitories));
-            }
+                // 判断用户是否登录
+                let num = store.state.user;
+                // 判断是否登录
+                if (num === null) {
+                    // 未登录保存到本地
+                    window.localStorage.setItem('hitories', JSON.stringify(this.hitories));
+                }
+            };
+            // 跳转到搜索结果页面
+            this.$router.push({
+                name: 'search-result',
+                params: {
+                    q: item
+                }
+            });
         },
         // 实时响应搜索框
         handle: _.debounce(async function () {
