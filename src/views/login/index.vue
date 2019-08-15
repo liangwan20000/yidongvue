@@ -74,8 +74,11 @@ export default {
             this.$store.commit('setUser', token);
             // 提示登陆成功
             this.$toast.success('登录成功');
-            // 跳转到home
-            this.$router.push({ name: 'layout' });
+            // 获取当前路由中的查询字符串，如果有跳转到redirect
+            // 如果没有跳转到首页
+            this.$router.push({
+                path: this.$route.query.redirect || '/'
+            });
             // 关闭登录等待
             this.btnLoading = false;
         }
