@@ -11,7 +11,7 @@
         <!-- 文章标题 -->
         <h2 class="article-title">{{ article.title }}</h2>
         <!-- 作者信息 -->
-        <AuthInfo></AuthInfo>
+        <AuthInfo :article="article"></AuthInfo>
         <!-- 文章内容 -->
         <div class="article-content" v-html="article.content">
         </div>

@@ -10,6 +10,8 @@ import 'vant/lib/index.css';
 import 'amfe-flexible';
 // 引入全局样式
 import './styles/index.css';
+// 导入验证是否登陆的插件
+import CheckLogin from '@/utils/CheckLogin.js';
 // 引入验证组件
 import VeeValidate, { Validator } from 'vee-validate';
 // 引入验证提示语言
@@ -31,6 +33,8 @@ Vue.use(Dialog);
 Vue.use(Popup);
 // 挂载头部输入框
 Vue.use(Search);
+// 挂载查看是否登录插件
+Vue.use(CheckLogin);
 
 // 给vue实例添加延时器
 Vue.prototype.$sleep = (time) => {

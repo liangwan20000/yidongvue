@@ -60,7 +60,7 @@
 
 <script>
 // 获取搜索建议
-import { get, getHistoricalRecords } from '@/api/search.js';
+import { get } from '@/api/search.js';
 // 引入lodash
 import _ from 'lodash';
 // 引入store
@@ -79,6 +79,7 @@ export default {
         };
     },
     methods: {
+        // 搜索部分文字高亮显示
         heightLight (item) {
             return item.toLocaleLowerCase().split(this.value).join(`<span style="color: red">${this.value}</span>`);
         },
