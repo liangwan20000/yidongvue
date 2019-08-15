@@ -57,6 +57,8 @@
 import { getsearchresults } from '@/api/search.js';
 // 引入全局过滤器
 import '@/filters/index.js';
+// 引入函数防抖
+import _ from 'lodash';
 export default {
     name: 'SearchResult',
     // 接受路由参数
@@ -81,9 +83,9 @@ export default {
     },
     // 自定义方法
     methods: {
-        async onLoad () {
+        onLoad: _.debounce(async function () {
             // 延迟加载
-            this.$sleep(1000);
+            await this.$sleep(1000);
             try {
                 // 发送请求
                 let data = await getsearchresults({
@@ -101,12 +103,13 @@ export default {
                 if (this.page >= this.pageCount) {
                     // 停止加载
                     this.finished = true;
+                    return;
                 }
                 this.page++;
             } catch (err) {
                 console.dir(err);
             }
-        }
+        }, 500)
     }
 };
 </script>

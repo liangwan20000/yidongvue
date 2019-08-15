@@ -77,7 +77,7 @@ export default {
             // 获取当前路由中的查询字符串，如果有跳转到redirect
             // 如果没有跳转到首页
             this.$router.push({
-                path: this.$route.query.redirect || '/'
+                path: this.$route.query.redirect || '/layout'
             });
             // 关闭登录等待
             this.btnLoading = false;

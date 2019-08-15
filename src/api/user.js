@@ -26,3 +26,11 @@ export const UnFollowUser = (id) => {
 export const followUser = (id) => {
     return request.delete(`/app/v1_0/user/followings/${id}`);
 };
+
+/**
+ * 刷新token
+ */
+
+export const getToken = (refreshToken) => {
+    return request.put('/app/v1_0/authorizations');
+};
