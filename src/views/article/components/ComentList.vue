@@ -1,30 +1,30 @@
 <template>
-  <van-list
-  v-model="loading"
-  :finished="finished"
-  finished-text="没有更多了"
-  @load="onLoad"
->
-  <van-cell
-    v-for="item in list"
-    :key="item.com_id.toString()"
-    :title="item.aut_name"
-  >
-    <div slot="icon">
-        <img width="60" style="border-radius: 50%" :src="item.aut_photo" alt="">&nbsp;&nbsp;
-    </div>
-
-    <!-- 最右侧的按钮 -->
-    <div>
-        <van-button type="default" size="mini" icon="star-o">赞</van-button>
-    </div>
-    <!-- 评论内容 -->
-    <div slot="label">
-        <p>{{ item.content }}</p>
-        <span>{{ item.pubdate | fltime }}</span>&nbsp;<span>回复: {{ item.reply_count }}</span>
-    </div>
-  </van-cell>
-</van-list>
+    <van-list
+    v-model="loading"
+    :finished="finished"
+    finished-text="没有更多了"
+    @load="onLoad"
+    >
+        <van-cell
+          v-for="item in list"
+          :key="item.com_id.toString()"
+          :title="item.aut_name"
+        >
+            <!-- 头像 -->
+            <div slot="icon">
+                <img width="60" style="border-radius: 50%" :src="item.aut_photo" alt="">&nbsp;&nbsp;
+            </div>
+            <!-- 最右侧的按钮 -->
+            <div>
+                <van-button type="default" size="mini" icon="star-o">赞</van-button>
+            </div>
+            <!-- 评论内容 -->
+            <div slot="label">
+                <p>{{ item.content }}</p>
+                <span>{{ item.pubdate | fltime }}</span>&nbsp;<span>回复: {{ item.reply_count }}</span>
+            </div>
+        </van-cell>
+    </van-list>
 </template>
 
 <script>
@@ -34,6 +34,7 @@ export default {
     // 评论列表
     name: 'ComentList',
     props: ['id', 'isArticle'],
+    // 数据
     data () {
         return {
             list: [],
@@ -43,6 +44,7 @@ export default {
             offset: null
         };
     },
+    // 自定义方法
     methods: {
         async onLoad () {
             try {
@@ -53,7 +55,6 @@ export default {
                     source: this.id,
                     offset: this.offset
                 });
-                console.log(data);
                 // 存储数据
                 this.list.push(...data.results);
                 // 存储最后一条ID

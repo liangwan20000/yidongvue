@@ -19,6 +19,8 @@
         <moreAction :article="article"></moreAction>
         <!-- 评论列表 -->
         <ComentList :id="article.art_id.toString()" :isArticle="true"></ComentList>
+        <!-- 发布评论 -->
+        <SendComment :id="article.art_id.toString()"></SendComment>
     </div>
   </div>
 </template>
@@ -32,6 +34,8 @@ import AuthInfo from './components/AuthInfo';
 import { queryArticle } from '@/api/article.js';
 // 引入评论列表
 import ComentList from './components/ComentList.vue';
+// 引入发布评论
+import SendComment from './components/SendComment.vue';
 export default {
     name: 'Article',
     props: ['id'],
@@ -42,7 +46,9 @@ export default {
         // 点赞
         moreAction,
         // 评论列表
-        ComentList
+        ComentList,
+        // 发布评论
+        SendComment
     },
     // 定义数据
     data () {
@@ -60,14 +66,24 @@ export default {
     methods: {
         // 获取文章详情方法
         async loadArticle () {
+            const toast = this.$toast.loading({
+                mask: true,
+                duration: 0, // 持续展示 toast
+                forbidClick: true, // 禁用背景点击
+                loadingType: 'spinner',
+                message: '正在加载中...'
+            });
+
             try {
                 // 发送请求得到结果
                 let data = await queryArticle(this.id);
                 // 赋值
                 this.article = data;
+                console.log(data);
             } catch (err) {
                 console.dir(err);
             }
+            toast.clear();
         }
     }
 };
