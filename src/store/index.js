@@ -8,7 +8,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         // 初始化的时候，直接获取本地用户状态
-        user: getUser()
+        user: getUser(),
+        // 控制replylist显示隐藏
+        showReplylist: false,
+        // 当前点击回复按钮的评论对象
+        currentComment: null
     },
     // 同步处理state
     mutations: {
@@ -18,6 +22,12 @@ export default new Vuex.Store({
             state.user = user;
             // 存储到本地
             setUser(user);
+        },
+        setShowReplylist (state, value) {
+            state.showReplylist = value;
+        },
+        setCurrentComment (state, value) {
+            state.currentComment = value;
         }
     },
     actions: {

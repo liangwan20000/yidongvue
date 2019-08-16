@@ -21,7 +21,7 @@
             <!-- 评论内容 -->
             <div slot="label">
                 <p>{{ item.content }}</p>
-                <span>{{ item.pubdate | fltime }}</span>&nbsp;<span>回复: {{ item.reply_count }}</span>
+                <span>{{ item.pubdate | fltime }}</span>&nbsp;<span @click="handleReply(item)">回复: {{ item.reply_count }}</span>
             </div>
         </van-cell>
     </van-list>
@@ -30,6 +30,8 @@
 <script>
 // 引入方法
 import { getComentList } from '@/api/comment.js';
+// 引入vuex
+// import { mapMutations } from '@/store/index.js';
 export default {
     // 评论列表
     name: 'ComentList',
@@ -68,6 +70,12 @@ export default {
             } catch (err) {
 
             }
+        },
+        // 点击回复，控制显示层显示
+        // 记录当前点击回复按钮对应的评论对象
+        handleReply (item) {
+            this.$store.commit('setShowReplylist', true);
+            this.$store.commit('setCurrentComment', item);
         }
     }
 };

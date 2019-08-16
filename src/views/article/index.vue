@@ -21,6 +21,8 @@
         <ComentList :id="article.art_id.toString()" :isArticle="true"></ComentList>
         <!-- 发布评论 -->
         <SendComment :id="article.art_id.toString()"></SendComment>
+        <!-- 评论的评论 -->
+        <reply-list :id="id" v-if="$store.state.showReplylist"></reply-list>
     </div>
   </div>
 </template>
@@ -36,6 +38,8 @@ import { queryArticle } from '@/api/article.js';
 import ComentList from './components/ComentList.vue';
 // 引入发布评论
 import SendComment from './components/SendComment.vue';
+// 引入文章评论的评论
+import ReplyList from './components/ReplyList.vue';
 export default {
     name: 'Article',
     props: ['id'],
@@ -48,7 +52,9 @@ export default {
         // 评论列表
         ComentList,
         // 发布评论
-        SendComment
+        SendComment,
+        // 评论详情
+        ReplyList
     },
     // 定义数据
     data () {
