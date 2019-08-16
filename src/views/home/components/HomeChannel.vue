@@ -108,11 +108,9 @@ export default {
                 this.channels.splice(index, 1);
                 // 判断用户是否登录
                 if (this.$store.state.user) {
-                    console.log(1);
                     // 发送请求删除数据中的频道
                     await deleteUserChannels(item.id).catch((err) => { return console.log(err); });
                 } else {
-                    console.log(this.channels);
                     // 用户没有登录保存到本地
                     window.localStorage.setItem('channels', JSON.stringify(this.channels));
                 }

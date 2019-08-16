@@ -16,7 +16,9 @@
         <div class="article-content" v-html="article.content">
         </div>
         <!-- 点赞和取消 -->
-        <moreAction></moreAction>
+        <moreAction :article="article"></moreAction>
+        <!-- 评论列表 -->
+        <ComentList :id="article.art_id.toString()" :isArticle="true"></ComentList>
     </div>
   </div>
 </template>
@@ -28,17 +30,24 @@ import moreAction from './components/moreAction';
 import AuthInfo from './components/AuthInfo';
 // 导入API
 import { queryArticle } from '@/api/article.js';
+// 引入评论列表
+import ComentList from './components/ComentList.vue';
 export default {
     name: 'Article',
     props: ['id'],
     // 挂载组件
     components: {
+        // 作者信息
         AuthInfo,
-        moreAction
+        // 点赞
+        moreAction,
+        // 评论列表
+        ComentList
     },
     // 定义数据
     data () {
         return {
+            // 文章详情
             article: null
         };
     },
@@ -68,6 +77,7 @@ export default {
 .article {
   margin-top: 92px;
   padding: 0px 20px;
+  overflow: hidden;
   .article-title {
     font-size: 40px;
     font-weight: bold;

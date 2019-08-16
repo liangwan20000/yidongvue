@@ -83,6 +83,7 @@ export default {
     },
     // 自定义方法
     methods: {
+        // 函数防抖
         onLoad: _.debounce(async function () {
             // 延迟加载
             await this.$sleep(1000);
@@ -114,7 +115,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
     .van-list {
         margin-top: 92px;
     }

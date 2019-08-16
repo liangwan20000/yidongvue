@@ -42,3 +42,35 @@ export const reportArticle = ({
 export const queryArticle = (id) => {
     return request.get(`/app/v1_0/articles/${id}`);
 };
+
+/**
+ * 点赞
+ */
+export const praiseArticle = (id) => {
+    return request.post('/app/v1_0/article/likings', {
+        target: id
+    });
+};
+
+/**
+ * 取消点赞
+ */
+export const delPraiseArticle = (id) => {
+    return request.delete(`/app/v1_0/article/likings/${id}`);
+};
+
+/**
+ * 不喜欢
+ */
+export const likeArticle = (id) => {
+    return request.post('/app/v1_0/article/dislikes', {
+        target: id
+    });
+};
+
+/**
+ * 取消不喜欢
+ */
+export const dellikeArticle = (id) => {
+    return request.delete(`/app/v1_0/article/dislikes/${id}`);
+};

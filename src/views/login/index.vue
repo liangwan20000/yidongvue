@@ -102,7 +102,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
     .van-button {
         width: 90%;
         transform: translateX(5%);

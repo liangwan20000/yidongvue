@@ -41,12 +41,10 @@ export default {
             try {
                 // 判断是否已关注
                 if (this.article.is_followed) {
-                    console.log(1);
                     // 如果已关注
                     await followUser(this.article.aut_id);
                     this.article.is_followed = false;
                 } else {
-                    console.log(2);
                     // 没有关注
                     await UnFollowUser(this.article.aut_id);
                     this.article.is_followed = true;

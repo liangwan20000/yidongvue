@@ -128,7 +128,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
     .van-dialog {
         top: 50%;
     }

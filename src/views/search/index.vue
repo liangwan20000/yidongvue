@@ -43,8 +43,8 @@
                 </div>
             </van-cell>
             <van-cell
-                v-for="item in hitories"
                 @click="onSearch(item)"
+                v-for="item in hitories"
                 :key="item"
                 :title="item">
                 <van-icon
@@ -60,7 +60,7 @@
 
 <script>
 // 获取搜索建议
-import { get } from '@/api/search.js';
+import { get, getHistoricalRecords } from '@/api/search.js';
 // 引入lodash
 import _ from 'lodash';
 // 引入store
@@ -78,10 +78,36 @@ export default {
             hitories: JSON.parse(window.localStorage.getItem('hitories')) || []
         };
     },
+    created () {
+        // 服务器的历史记录
+        this.query();
+    },
     methods: {
         // 搜索部分文字高亮显示
         heightLight (item) {
             return item.toLocaleLowerCase().split(this.value).join(`<span style="color: red">${this.value}</span>`);
+        },
+        // 获取历史记录
+        async query () {
+            // 判断用户是否登录
+            let num = store.state.user;
+            // 判断是否登录
+            if (num === null) {
+                return;
+            }
+            // 如果登录了获取服务器历史记录
+            let data = await getHistoricalRecords();
+            // 保存服务器历史记录
+            this.hitories.push(...data.keywords);
+        },
+        jump (item) {
+            // 跳转到搜索结果页面
+            this.$router.push({
+                name: 'search-result',
+                params: {
+                    q: item
+                }
+            });
         },
         // 搜索
         async onSearch (item) {
@@ -97,15 +123,12 @@ export default {
                 if (num === null) {
                     // 未登录保存到本地
                     window.localStorage.setItem('hitories', JSON.stringify(this.hitories));
+                    // 跳转到搜索结果页面
+                    this.jump(item);
+                    return;
                 }
             };
-            // 跳转到搜索结果页面
-            this.$router.push({
-                name: 'search-result',
-                params: {
-                    q: item
-                }
-            });
+            this.jump(item);
         },
         // 实时响应搜索框
         handle: _.debounce(async function () {
@@ -128,7 +151,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
     .van-nav-bar__title {
         padding: 0;
         height: 90px;
