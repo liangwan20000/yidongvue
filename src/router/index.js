@@ -17,6 +17,12 @@ export default new Router({
             name: 'user-profile',
             component: () => import(/* webpackChunkName: "user-profile" */ '@/views/user-profile/index.vue')
         },
+        // 小智
+        {
+            path: '/chat',
+            name: 'chat',
+            component: () => import(/* webpackChunkName: "chat" */ '@/views/chat/index.vue')
+        },
         // 搜索结果页
         {
             path: '/search-result/:q',
@@ -25,6 +31,7 @@ export default new Router({
             props: true,
             component: () => import(/* webpackChunkName: "search-result" */ '@/views/search-result/index.vue')
         },
+        // 文章详情
         {
             path: '/article/:id',
             name: 'article',
@@ -59,6 +66,7 @@ export default new Router({
                     name: 'home',
                     component: () => import(/* webpackChunkName: "home" */ '@/views/home/index.vue')
                 },
+                // 我的
                 {
                     path: '/my',
                     name: 'my',
