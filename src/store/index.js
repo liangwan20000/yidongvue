@@ -23,10 +23,14 @@ export default new Vuex.Store({
             // 存储到本地
             setUser(user);
         },
+        // 控制replyList显示隐藏
         setShowReplylist (state, value) {
+            // 获取值
             state.showReplylist = value;
         },
+        // 评论对象
         setCurrentComment (state, value) {
+            // 获取评论对象
             state.currentComment = value;
         }
     },

@@ -11,6 +11,12 @@ export default new Router({
             name: 'search',
             component: () => import(/* webpackChunkName: "search" */ '@/views/search/index.vue')
         },
+        // 用户信息页
+        {
+            path: '/user-profile',
+            name: 'user-profile',
+            component: () => import(/* webpackChunkName: "user-profile" */ '@/views/user-profile/index.vue')
+        },
         // 搜索结果页
         {
             path: '/search-result/:q',
@@ -52,6 +58,11 @@ export default new Router({
                     path: '/home',
                     name: 'home',
                     component: () => import(/* webpackChunkName: "home" */ '@/views/home/index.vue')
+                },
+                {
+                    path: '/my',
+                    name: 'my',
+                    component: () => import(/* webpackChunkName: "my" */ '@/views/my/index.vue')
                 }
             ]
         }

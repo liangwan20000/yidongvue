@@ -34,3 +34,17 @@ export const followUser = (id) => {
 export const getToken = (refreshToken) => {
     return request.put('/app/v1_0/authorizations');
 };
+
+/**
+ * 获取用户个人资料
+ */
+export const getUserProfile = () => {
+    return request.get('/app/v1_0/user/profile');
+};
+
+/**
+ * 获取用户信息
+ */
+export const getUserInfo = () => {
+    return request.get('/app/v1_0/user');
+};
